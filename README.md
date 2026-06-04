@@ -3,7 +3,7 @@
 > Guía personal de comandos Git para consultar cuando la necesite.
 > Los comandos Git son iguales en cualquier terminal (PowerShell, CMD, bash).
 
-## Índice
+## Índices
 
 - [Flujo de trabajo diario](#flujo-de-trabajo-diario)
 - [Comandos consultivos](#comandos-consultivos)
