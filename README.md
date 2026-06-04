@@ -22,13 +22,13 @@ Editar + Ctrl+S → git status → git diff → git add → git commit → git p
    (VS Code)        (¿qué?)     (detalle)  (preparar) (guardar)   (subir)
 ```
 
-| Paso | Comando | Qué hace |
-|------|---------|----------|
-| 1 | `git status` | Ver qué archivos cambiaron |
-| 2 | `git diff` | Ver el detalle línea por línea (salir con `q`) |
-| 3 | `git add archivo.md` | Preparar un archivo específico |
-| 4 | `git commit -m "mensaje"` | Guardar la versión |
-| 5 | `git push` | Subir los commits al remoto |
+| Paso | Comando                   | Qué hace                                       |
+| ---- | ------------------------- | ---------------------------------------------- |
+| 1    | `git status`              | Ver qué archivos cambiaron                     |
+| 2    | `git diff`                | Ver el detalle línea por línea (salir con `q`) |
+| 3    | `git add archivo.md`      | Preparar un archivo específico                 |
+| 4    | `git commit -m "mensaje"` | Guardar la versión                             |
+| 5    | `git push`                | Subir los commits al remoto                    |
 
 > **Regla:** `add` prepara · `commit` guarda · `push` sube.
 
@@ -38,14 +38,14 @@ Editar + Ctrl+S → git status → git diff → git add → git commit → git p
 
 > 🔍 Solo leen información. No cambian nada, son 100% seguros.
 
-| Comando | Qué responde |
-|---------|--------------|
-| `git status` | ¿Qué cambió y qué está preparado? |
-| `git diff` | ¿Qué líneas cambié (sin preparar)? |
+| Comando             | Qué responde                         |
+| ------------------- | ------------------------------------ |
+| `git status`        | ¿Qué cambió y qué está preparado?    |
+| `git diff`          | ¿Qué líneas cambié (sin preparar)?   |
 | `git diff --staged` | ¿Qué voy a commitear (ya preparado)? |
-| `git log --oneline` | Historial compacto de commits |
-| `git remote -v` | ¿A qué remoto está conectado? |
-| `git branch` | ¿En qué rama estoy? |
+| `git log --oneline` | Historial compacto de commits        |
+| `git remote -v`     | ¿A qué remoto está conectado?        |
+| `git branch`        | ¿En qué rama estoy?                  |
 
 ---
 
@@ -74,7 +74,7 @@ git fetch                   # Descargar sin integrar (inspeccionar primero)
 
 ---
 
-## Deshacer cambios
+## Eliminar cambios
 
 > ⚠️ Usar con cuidado. Verificar siempre con `git status` antes.
 
