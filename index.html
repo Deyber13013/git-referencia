@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referencia Git · Buscar por intención</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0e14;
+    --bg-2:#11151f;
+    --panel:#161b27;
+    --panel-2:#1b2230;
+    --border:#252d3d;
+    --text:#dfe5ef;
+    --muted:#8a94a7;
+    --accent:#f5a623;
+    --accent-soft:rgba(245,166,35,.12);
+    --green:#5ec27e;
+    --cyan:#4cc4d6;
+    --red:#e0697a;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --sans:'Sora',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.55;
+    min-height:100vh;
+    background-image:
+      radial-gradient(circle at 15% 0%,rgba(245,166,35,.06),transparent 40%),
+      radial-gradient(circle at 85% 100%,rgba(76,196,214,.05),transparent 40%),
+      linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);
+    background-size:auto,auto,42px 42px,42px 42px;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:0 20px 80px}
+
+  header{padding:56px 0 28px;text-align:center}
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--mono);font-size:12px;letter-spacing:.5px;
+    color:var(--accent);background:var(--accent-soft);
+    border:1px solid rgba(245,166,35,.25);border-radius:999px;
+    padding:5px 14px;margin-bottom:22px;text-transform:uppercase;
+  }
+  .badge::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+  h1{font-size:clamp(30px,5vw,46px);font-weight:800;letter-spacing:-1px;line-height:1.1}
+  h1 .g{color:var(--accent)}
+  header p{color:var(--muted);margin-top:14px;font-size:16px;max-width:540px;margin-inline:auto}
+
+  .search-box{position:sticky;top:14px;z-index:10;margin:34px 0 14px}
+  .search-inner{position:relative}
+  .search-inner svg{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--muted);width:20px;height:20px}
+  #q{
+    width:100%;font-family:var(--mono);font-size:16px;color:var(--text);
+    background:var(--panel);border:1px solid var(--border);border-radius:14px;
+    padding:18px 18px 18px 52px;outline:none;transition:.2s;
+    box-shadow:0 8px 30px rgba(0,0,0,.35);
+  }
+  #q:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft),0 8px 30px rgba(0,0,0,.4)}
+  #q::placeholder{color:var(--muted)}
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:6px 0 30px}
+  .chip{
+    font-family:var(--mono);font-size:12.5px;color:var(--muted);
+    background:var(--bg-2);border:1px solid var(--border);border-radius:8px;
+    padding:6px 12px;cursor:pointer;transition:.18s;
+  }
+  .chip:hover{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+
+  .count{font-family:var(--mono);font-size:13px;color:var(--muted);margin-bottom:18px}
+  .count b{color:var(--text)}
+
+  .cat{
+    font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:1.5px;
+    color:var(--accent);margin:30px 0 14px;display:flex;align-items:center;gap:10px;
+  }
+  .cat::after{content:"";flex:1;height:1px;background:var(--border)}
+
+  .card{
+    background:var(--panel);border:1px solid var(--border);border-radius:14px;
+    padding:20px 22px;margin-bottom:14px;transition:.18s;
+    animation:rise .4s ease both;
+  }
+  .card:hover{border-color:#33405a;transform:translateY(-2px)}
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  .card h3{font-size:17px;font-weight:600;margin-bottom:4px}
+  .card .desc{color:var(--muted);font-size:14px;margin-bottom:14px}
+
+  .cmd{
+    display:flex;align-items:flex-start;gap:12px;
+    background:var(--bg);border:1px solid var(--border);border-radius:10px;
+    padding:12px 14px;margin-top:9px;
+  }
+  .cmd-main{flex:1;min-width:0}
+  .cmd code{
+    font-family:var(--mono);font-size:14px;color:var(--green);
+    display:block;word-break:break-all;
+  }
+  .cmd code .flag{color:var(--cyan)}
+  .cmd code .ph{color:var(--accent);font-style:italic}
+  .cmd small{display:block;color:var(--muted);font-size:12.5px;margin-top:5px;font-family:var(--sans)}
+  .copy{
+    font-family:var(--mono);font-size:11px;color:var(--muted);
+    background:var(--panel-2);border:1px solid var(--border);border-radius:7px;
+    padding:6px 10px;cursor:pointer;transition:.15s;white-space:nowrap;flex-shrink:0;
+  }
+  .copy:hover{color:var(--accent);border-color:var(--accent)}
+  .copy.ok{color:var(--green);border-color:var(--green)}
+
+  .empty{text-align:center;color:var(--muted);font-family:var(--mono);padding:50px 0;display:none}
+  .empty span{color:var(--accent)}
+
+  footer{text-align:center;color:var(--muted);font-family:var(--mono);font-size:12.5px;margin-top:50px;border-top:1px solid var(--border);padding-top:26px}
+  footer a{color:var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="badge">Referencia personal de Git</div>
+    <h1><span class="g">git</span> · ¿qué necesitás hacer?</h1>
+    <p>Buscá por lo que querés lograr, no por el comando. Escribí algo como “subir cambios” o “deshacer”.</p>
+  </header>
+
+  <div class="search-box">
+    <div class="search-inner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="q" type="text" placeholder="Ej: subir cambios, crear rama, deshacer, ver historial…" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="chips" id="chips"></div>
+  <div class="count" id="count"></div>
+  <div id="results"></div>
+  <div class="empty" id="empty">Sin resultados para “<span id="qecho"></span>”. Probá con otra palabra.</div>
+
+  <footer>
+    Mi referencia de Git · mantenida en
+    <a href="https://github.com/Deyber13013/git-referencia" target="_blank">github.com/Deyber13013</a>
+  </footer>
+</div>
+
+<script>
+// Cada entrada: qué necesitás (intent) + palabras clave (kw) + comandos (cmds)
+const DATA = [
+  { cat:"Empezar y configurar", intent:"Configurar mi identidad en Git", kw:"configurar identidad nombre correo email usuario primera vez setup config quien soy",
+    cmds:[
+      {c:'git config --global user.name "Tu Nombre"', d:"Define tu nombre (una vez por máquina)."},
+      {c:'git config --global user.email "tu@correo.com"', d:"Define tu correo. Usá el de GitHub."},
+      {c:'git config --list', d:"Consultivo: muestra toda tu configuración actual."}
+    ]},
+  { cat:"Empezar y configurar", intent:"Crear un repositorio nuevo", kw:"crear nuevo repositorio repo iniciar inicializar empezar desde cero proyecto",
+    cmds:[{c:'git init', d:"Convierte la carpeta actual en un repositorio Git."}]},
+  { cat:"Empezar y configurar", intent:"Descargar un repositorio que ya existe", kw:"descargar clonar bajar copiar repositorio existente traer github clone",
+    cmds:[{c:'git clone https://github.com/USUARIO/REPO.git', d:"Descarga el repo completo con todo su historial."}]},
+  { cat:"Empezar y configurar", intent:"Excluir archivos del rastreo (.gitignore)", kw:"ignorar excluir gitignore no subir archivos secretos node_modules env claves",
+    cmds:[
+      {c:'New-Item .gitignore', d:"PowerShell: crea el archivo de exclusiones."},
+      {c:'# Dentro de .gitignore, una regla por línea:\n*.log\n.env\n/node_modules', d:"Patrones de lo que Git debe ignorar."}
+    ]},
+
+  { cat:"Consultar el estado", intent:"Ver qué cambió", kw:"ver estado cambios que cambio status revisar modificados pendientes situacion",
+    cmds:[{c:'git status', d:"Lista archivos modificados, nuevos y preparados."}]},
+  { cat:"Consultar el estado", intent:"Ver el detalle de los cambios línea por línea", kw:"ver diferencias detalle diff que cambie lineas comparar antes despues",
+    cmds:[
+      {c:'git diff', d:"Cambios que aún NO preparaste. Salir del paginador con la tecla q."},
+      {c:'git diff --staged', d:"Cambios que ya preparaste (lo que va a entrar en el commit)."}
+    ]},
+  { cat:"Consultar el estado", intent:"Ver el historial de commits", kw:"historial log commits versiones lista pasado cambios anteriores quien cuando",
+    cmds:[
+      {c:'git log --oneline', d:"Historial compacto: un commit por línea (hash + mensaje)."},
+      {c:'git log', d:"Historial completo con autor, fecha y mensaje."}
+    ]},
+  { cat:"Consultar el estado", intent:"Ver en qué rama estoy y cuáles existen", kw:"ver rama ramas branch actual cuales existen donde estoy",
+    cmds:[{c:'git branch', d:"Lista las ramas; la actual aparece marcada con *."}]},
+  { cat:"Consultar el estado", intent:"Ver a qué remoto está conectado el repo", kw:"ver remoto remote origin url conexion github donde sube nube",
+    cmds:[{c:'git remote -v', d:"Muestra las URLs de los remotos (fetch y push)."}]},
+
+  { cat:"Guardar y subir cambios", intent:"Preparar archivos para el commit", kw:"preparar add staging agregar añadir incluir seleccionar archivos",
+    cmds:[
+      {c:'git add archivo.md', d:"Prepara un archivo específico."},
+      {c:'git add .', d:"Prepara TODOS los cambios de la carpeta actual."}
+    ]},
+  { cat:"Guardar y subir cambios", intent:"Guardar una versión (commit)", kw:"guardar commit versión confirmar registrar punto historia mensaje",
+    cmds:[{c:'git commit -m "Mensaje claro del cambio"', d:"Crea un punto en la historia con lo que preparaste."}]},
+  { cat:"Guardar y subir cambios", intent:"Subir cambios al remoto (GitHub)", kw:"subir push publicar enviar nube github remoto compartir cargar",
+    cmds:[
+      {c:'git push', d:"Envía tus commits al remoto (una vez configurado el -u)."},
+      {c:'git push -u origin main', d:"Primer push: vincula tu rama main con origin y la recuerda."}
+    ]},
+  { cat:"Guardar y subir cambios", intent:"Vincular mi repo local con GitHub", kw:"vincular conectar remoto remote add origin github asociar enlazar",
+    cmds:[{c:'git remote add origin https://github.com/USUARIO/REPO.git', d:"Conecta tu repo local con el de GitHub (una vez)."}]},
+
+  { cat:"Traer cambios", intent:"Traer cambios del remoto", kw:"traer bajar actualizar pull descargar cambios remoto sincronizar integrar nube",
+    cmds:[{c:'git pull', d:"Descarga e integra los commits del remoto en tu rama."}]},
+  { cat:"Traer cambios", intent:"Descargar sin integrar (inspeccionar primero)", kw:"descargar sin integrar fetch revisar antes inspeccionar seguro traer",
+    cmds:[{c:'git fetch', d:"Trae los cambios remotos sin tocar tu trabajo. Más seguro para inspeccionar."}]},
+
+  { cat:"Trabajar con ramas", intent:"Crear una rama nueva y cambiarme a ella", kw:"crear rama nueva branch switch checkout feature experimentar separar",
+    cmds:[{c:'git switch -c nombre-rama', d:"Crea la rama y te cambia a ella en un solo paso."}]},
+  { cat:"Trabajar con ramas", intent:"Cambiar a otra rama existente", kw:"cambiar rama switch checkout moverse ir otra branch",
+    cmds:[{c:'git switch nombre-rama', d:"Te mueve a una rama que ya existe."}]},
+  { cat:"Trabajar con ramas", intent:"Unir una rama con otra (merge)", kw:"unir combinar merge fusionar juntar ramas integrar feature main",
+    cmds:[
+      {c:'git switch main', d:"Primero ubicate en la rama destino (la que recibe)."},
+      {c:'git merge nombre-rama', d:"Trae los cambios de nombre-rama hacia la rama actual."}
+    ]},
+
+  { cat:"Deshacer (con cuidado)", intent:"Descartar cambios que no guardé", kw:"deshacer descartar revertir cambios borrar volver restore perder modificaciones",
+    cmds:[{c:'git restore archivo.md', d:"⚠️ Borra los cambios NO preparados de ese archivo, sin aviso."}]},
+  { cat:"Deshacer (con cuidado)", intent:"Quitar un archivo del área de preparado", kw:"quitar unstage sacar preparado restore staged deshacer add",
+    cmds:[{c:'git restore --staged archivo.md', d:"Lo saca del staging sin borrar tus cambios."}]},
+  { cat:"Deshacer (con cuidado)", intent:"Corregir el mensaje del último commit", kw:"corregir cambiar mensaje ultimo commit amend editar arreglar",
+    cmds:[{c:'git commit --amend -m "Nuevo mensaje"', d:"⚠️ Solo si todavía NO hiciste push de ese commit."}]}
+];
+
+const results = document.getElementById('results');
+const countEl = document.getElementById('count');
+const emptyEl = document.getElementById('empty');
+const qInput = document.getElementById('q');
+const chipsEl = document.getElementById('chips');
+
+const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+
+// resalta flags (--algo, -x) y PLACEHOLDERS en MAYUSCULA o palabra-rama
+function fmt(cmd){
+  return cmd
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/(\s)(--?[a-z][a-z-]*)/g,'$1<span class="flag">$2</span>')
+    .replace(/\b(USUARIO|REPO|nombre-rama|archivo\.md|main)\b/g,'<span class="ph">$1</span>');
+}
+
+function render(list){
+  results.innerHTML='';
+  let last='';
+  list.forEach((item,i)=>{
+    if(item.cat!==last){
+      const h=document.createElement('div');h.className='cat';h.textContent=item.cat;
+      results.appendChild(h);last=item.cat;
+    }
+    const card=document.createElement('div');card.className='card';
+    card.style.animationDelay=(Math.min(i,12)*0.03)+'s';
+    let cmds='';
+    item.cmds.forEach(cm=>{
+      cmds+=`<div class="cmd"><div class="cmd-main"><code>${fmt(cm.c)}</code><small>${cm.d}</small></div>
+        <button class="copy" data-c="${cm.c.replace(/"/g,'&quot;')}">copiar</button></div>`;
+    });
+    card.innerHTML=`<h3>${item.intent}</h3>${cmds}`;
+    results.appendChild(card);
+  });
+  countEl.innerHTML=`<b>${list.length}</b> ${list.length===1?'tarea':'tareas'} ${qInput.value?'encontradas':'disponibles'}`;
+  emptyEl.style.display = list.length? 'none':'block';
+  document.getElementById('qecho').textContent=qInput.value;
+}
+
+function search(){
+  const q=norm(qInput.value.trim());
+  if(!q){render(DATA);return;}
+  const terms=q.split(/\s+/);
+  const out=DATA.filter(item=>{
+    const hay=norm(item.intent+' '+item.kw+' '+item.cmds.map(c=>c.c).join(' '));
+    return terms.every(t=>hay.includes(t));
+  });
+  render(out);
+}
+
+// copiar al portapapeles
+results.addEventListener('click',e=>{
+  if(e.target.classList.contains('copy')){
+    navigator.clipboard.writeText(e.target.dataset.c).then(()=>{
+      const b=e.target;b.textContent='✓ copiado';b.classList.add('ok');
+      setTimeout(()=>{b.textContent='copiar';b.classList.remove('ok')},1400);
+    });
+  }
+});
+
+// chips de acceso rápido
+['subir cambios','crear rama','deshacer','ver historial','clonar','configurar'].forEach(t=>{
+  const c=document.createElement('button');c.className='chip';c.textContent=t;
+  c.onclick=()=>{qInput.value=t;search();qInput.focus();};
+  chipsEl.appendChild(c);
+});
+
+qInput.addEventListener('input',search);
+render(DATA);
+qInput.focus();
+</script>
+</body>
+</html>
